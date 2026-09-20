@@ -1,0 +1,7 @@
+# Terraform state files — may contain sensitive information
+*.tfstate
+*.tfstate.*
+# Terraform working directory
+**/.terraform/*
+.terraform.lock.hcl
+var.sh

@@ -15,17 +15,22 @@ terraform {
 }
 
 provider "azurerm" {
-    features {
-      
-    }
-  
+    features {}
 }
 
+
 variable "env" {
-    type = string
-    description = "the env type"
-    default = "staging"
-  
+  description = "The environment type."
+  type        = string
+  default     = "staging"
+}
+
+locals {
+  common_tags = {
+    environment = "dev"
+    lob = "banking"
+    stage = "alpha"
+  }
 }
 
 resource "azurerm_resource_group" "example" {
@@ -42,6 +47,13 @@ resource "azurerm_storage_account" "example" {
   account_replication_type = "LRS"
 
   tags = {
-    env = "staging"
+
+  env = local.common_tags.stage # Using the local variable to set the tag value
+
   }
+
 }
+
+  output "storage_account_name" {
+    value = azurerm_storage_account.example.name
+  }

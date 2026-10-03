@@ -11,36 +11,12 @@ locals{
   ]
 
   vm_size = lookup(var.vm_sizes, var.environment, lower("dev"))
-
-  #assignment 9
-user_location = ["eastus", "westus","eastus"]
-default_location = ["centralus"]
-
-unique_location = toset(concat(local.user_location,local.default_location))
-
-#assignment 10
-
-monthly_costs = [-50, 100, 75, 200]
-positive_cost = [for cost in local.monthly_costs :
-abs(cost)]
-max_cost = max(local.positive_cost...)
-
-#assignment 11
-
-current_time = timestamp()
-resource_name = formatdate("YYYYMMDD",local.current_time)
-tag_date = formatdate("DD-MM-YYYY",local.current_time)
-
-#assignment 12
-config_content = sensitive(file(config.json))
-
 }
 
-resource azurerm_resource_group rg {
-name = "${local.formatted_name}-rg"
-location = "westus2"
-
-tags = local.merge_tags
+resource azurerm_resource_group "rg" {
+  name     = "${local.formatted_name}-rg"
+  location = "westus2"
+  tags     = local.merge_tags
 }
 
 
@@ -92,25 +68,3 @@ resource "azurerm_network_security_group" "example" {
     value = local.vm_size
   }
 
-output "unique_location" {
-  value = local.unique_location
-}
-
-
-output "max_cost"{
-    value = local.max_cost
-}
-
-output "positive" {
-    value = local.positive_cost
-  
-}
-
-output "resource_tag" {
-    value = local.resource_name
-  
-}
-
-output "config_loaded" {
-  value = nonsensitive(jsondecode(local.config_content))
-}
